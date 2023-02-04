@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dictionary
 {
-    internal class Word
+    internal class Vocabulary
     {
-        public string Word { get; set; }
-        public string Translation { get; set; }
     }
 }
