@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Dictionary
 {
-    internal class Word
+    internal class Words
     {
         public string Word { get; set; }
-        public string Translation { get; set; }
+        public List<string> Translation { get; set; }
+       
     }
 }

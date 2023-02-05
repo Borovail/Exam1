@@ -27,18 +27,18 @@ namespace Dictionary
             }
         }
 
-        public BindingList<Word> LoadData()
+        public BindingList<Words> LoadData()
         {
             if (!File.Exists(_path))
             {
                 File.CreateText(_path).Dispose();
-                return new BindingList<Word>();
+                return new BindingList<Words>();
             }
 
             using (var reader = File.OpenText(_path))
             {
                 var vocabulary = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<BindingList<Word>>(vocabulary);
+                return JsonConvert.DeserializeObject<BindingList<Words>>(vocabulary);
             }
         }
 
