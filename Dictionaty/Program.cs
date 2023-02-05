@@ -1,49 +1,61 @@
 ﻿using Dictionary;
 using System.ComponentModel;
 using System.IO;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 
-int input;
+int input=0;
 
-string Path = $"{Environment.CurrentDirectory}\\Vocabulary";
+string Path="";
 string Word, Translation;
-var translations=new List<string>();
+var translations=new  List<string>();
 Vocabulary vocabulary;
 do
 {
-    ///////////////////////
-    Console.WriteLine("0 - Select exicting vocabulary");
-    Console.WriteLine("1 - Create Vocabulary");
-
-    input = Convert.ToInt32(Console.ReadLine());
-
-    switch (input)
+    try
     {
-        case 0:
-            Console.WriteLine("Chose Type Vocabulary");
-            Console.WriteLine("Variants: ");
-            Console.WriteLine("1 - English-Urkainan\t2 - Ukrainian-English\t3 - English-Russian\t4 - Russian-English");
 
-            input = Convert.ToInt32(Console.ReadLine());
 
-            CheckNoExistingDirectionary(ref Path, input);
-            input = 3;
-            break;
+        ///////////////////////
+        Console.WriteLine("0 - Select exicting vocabulary");
+        Console.WriteLine("1 - Create Vocabulary");
 
-        case 1:
-            Console.WriteLine("Chose Type Vocabulary");
-            Console.WriteLine("Variants: ");
-            Console.WriteLine("1 - English-Urkainan\t2 - Ukrainian-English\t3 - English-Russian\t4 - Russian-English");
+        input = Convert.ToInt32(Console.ReadLine());
 
-            input = Convert.ToInt32(Console.ReadLine());
+        switch (input)
+        {
+            case 0:
+                Console.WriteLine("Chose Type Vocabulary");
+                Console.WriteLine("Variants: ");
+                Console.WriteLine("1 - English-Urkainan\t2 - Ukrainian-English\t3 - English-Russian\t4 - Russian-English");
 
-            CheckExistingDirectionary(ref Path, input);
-            input = 3;
-            break;
+                input = Convert.ToInt32(Console.ReadLine());
+
+                CheckNoExistingDirectionary(ref Path, ref input);            
+                break;
+
+            case 1:
+                Console.WriteLine("Chose Type Vocabulary");
+                Console.WriteLine("Variants: ");
+                Console.WriteLine("1 - English-Urkainan\t2 - Ukrainian-English\t3 - English-Russian\t4 - Russian-English");
+
+                input = Convert.ToInt32(Console.ReadLine());
+
+                CheckExistingDirectionary(ref Path, ref input);
+
+                break;
+            default:
+                Console.WriteLine("Enter 0 or 1");
+                break;
+        }
+    }
+    catch
+    {
+        Console.WriteLine("Something went wrong. Try again");
+
     }
 
-
-} while (input != 3);
+} while (input != 999);
 
 
 
@@ -54,77 +66,124 @@ vocabulary = new Vocabulary(Path);
 do
 {
 
-
-    ///////////////////
-    Console.WriteLine("1 - Add new word");
-    Console.WriteLine("2 - Edit word");
-    Console.WriteLine("3 - Delete word");
-    Console.WriteLine("4 - Delete translation");
-    Console.WriteLine("5 - Translate the word");
-    Console.WriteLine("6 - Exit");
-    input = Convert.ToInt32(Console.ReadLine());
-
-    switch (input)
+    try
     {
 
-        case 1:
 
-            Console.WriteLine("Enter the word");
-            Word = Console.ReadLine();
+        ///////////////////
+        Console.WriteLine();
+        Console.WriteLine("1 - Add new word");
+        Console.WriteLine("2 - Edit word");
+        Console.WriteLine("3 - Edit translation");
+        Console.WriteLine("4 - Delete word");
+        Console.WriteLine("5 - Delete translation");
+        Console.WriteLine("6 - Translate the word");
+        Console.WriteLine("7 - Exit");
+        input = Convert.ToInt32(Console.ReadLine());
 
-            Console.WriteLine("Enter the translation");
-            Translation = Console.ReadLine();
-            translations.Add(Translation);
-            do
-            {
-                Console.WriteLine("If you want to add more translation, write new translation. If it is end enter Exit");
+        switch (input)
+        {
+
+            case 1:
+                Console.WriteLine("Enter the word\t\t\t\tReturn back - Enter Exit");
+                Word = Console.ReadLine();
+
+                if (Word.ToLower() == "exit") break;
+
+                Console.WriteLine("Enter the translation");
                 Translation = Console.ReadLine();
-
-                if (Translation.ToLower() == "exit") break;
 
                 translations.Add(Translation);
 
-            } while (true);
+                do
+                {
+                    Console.WriteLine("Translation seccsfully added");
+                    Console.WriteLine("If you want to add more translation, write new translation. If it is end enter Exit");
+                    Translation = Console.ReadLine();
 
-            vocabulary.AddNewWord(Word, translations);
+                    if (Translation.ToLower() == "exit")
+                    {
+                        Console.WriteLine("Translations seccsfully added"); 
+                        break;
+                    }
+                    translations.Add(Translation);
 
-            break;
+                } while (true);
 
-        case 2:
+                vocabulary.AddNewWord(Word, translations);
+                translations.Clear();
+                break;
 
-            break;
+            case 2:
+                Console.WriteLine("Enter word you want to edit\t\t\t\tReturn back - Enter Exit");
+                Word= Console.ReadLine();
 
-        case 3:
-            Console.WriteLine("Enter the word you want to delete");
-            Word = Console.ReadLine();
-            vocabulary.DeleteWord(Word);
-            break;
+                if (Word.ToLower() == "exit") break;
 
-        case 4:
-            Console.WriteLine("Enter the word which translation you want to delete");
-            Word = Console.ReadLine();
+                Console.WriteLine("Enter new word");
+                vocabulary.EditWord(Word,Console.ReadLine());
 
-            Console.WriteLine("Enter the translation");
-            Translation = Console.ReadLine();
 
-            vocabulary.DeleteTranslation(Word, Translation);
-            break;
+                break;
 
-        case 5:
-            Console.WriteLine("Enter word you want to translate");
-            Word = Console.ReadLine();
+            case 3:
+                Console.WriteLine("Enter word you want which translation you want to edit\t\t\t\tReturn back - Enter Exit");
+                Word = Console.ReadLine();
 
-            vocabulary.SearchTranslation(Word);
+                if (Word.ToLower() == "exit") break;
 
-            break;
+                Console.WriteLine("Enter old translation");
+                Translation= Console.ReadLine();
+
+                Console.WriteLine("Enter new translation");
+                vocabulary.EditTranslation(Word, Translation,Console.ReadLine());
+
+                break;
+
+            case 4:
+                Console.WriteLine("Enter the word you want to delete\t\t\t\tReturn back - Enter Exit");
+                Word = Console.ReadLine();
+
+                if (Word.ToLower() == "exit") break;
+
+                vocabulary.DeleteWord(Word);
+                break;
+
+            case 5:
+                Console.WriteLine("Enter the word which translation you want to delete\t\t\t\tReturn back - Enter Exit");
+                Word = Console.ReadLine();
+
+                if (Word.ToLower() == "exit") break;
+
+                Console.WriteLine("Enter the translation");
+                Translation = Console.ReadLine();
+
+                vocabulary.DeleteTranslation(Word, Translation);
+                break;
+
+            case 6:
+                Console.WriteLine("Enter word you want to translate\t\t\t\tReturn back - Enter Exit");
+                Word = Console.ReadLine();
+
+                if (Word.ToLower() == "exit") break;
+
+                vocabulary.SearchTranslation(Word);
+
+                break;
+
+            default:
+                if (input != 7)
+                {
+                Console.WriteLine("Wrong number");
+                }
+                break;
+        }
     }
-
-
-} while (input != 6);
-
-
-
-
+    catch
+    {
+        Console.WriteLine("Something went wrong. Try again");
+    }
+} while (input != 7);
 
 
 
@@ -157,24 +216,31 @@ do
 
 
 
-void CheckExistingDirectionary(ref string path, int input)
+void CheckExit(string exit)
+{
+    if (exit.ToLower() == "exit")
+        return;
+}
+
+
+void CheckExistingDirectionary(ref string path,ref int input)
 {
 
     switch (input)
     {
         case 1:
-            path += "English-Urkainan";
+            path = $"{Environment.CurrentDirectory}\\Vocabulary" + "English-Urkainan.json";
             break;
         case 2:
-            path += "Ukrainian-English";
+            path = $"{Environment.CurrentDirectory}\\Vocabulary" + "Ukrainian-English.json";
 
             break;
         case 3:
-            path += "English-Russian";
+            path = $"{Environment.CurrentDirectory}\\Vocabulary" + "English-Russian.json";
 
             break;
         case 4:
-            path += "Russian-English";
+            path = $"{Environment.CurrentDirectory}\\Vocabulary" + "Russian-English.json";
             break;
 
         default:
@@ -189,26 +255,26 @@ void CheckExistingDirectionary(ref string path, int input)
     }
 
     Console.WriteLine("Vocabulary seccesfully created");
-
+    input = 999;
 }
-void CheckNoExistingDirectionary(ref string path, int input)
+void CheckNoExistingDirectionary(ref string path,ref int input)
 {
 
     switch (input)
     {
         case 1:
-            path += "English-Urkainan";
+            path = $"{Environment.CurrentDirectory}\\Vocabulary" + "English-Urkainan.json";
             break;
         case 2:
-            path += "Ukrainian-English";
+            path = $"{Environment.CurrentDirectory}\\Vocabulary" + "Ukrainian-English.json";
 
             break;
         case 3:
-            path += "English-Russian";
+            path = $"{Environment.CurrentDirectory}\\Vocabulary" + "English-Russian.json";
 
             break;
         case 4:
-            path += "Russian-English";
+            path = $"{Environment.CurrentDirectory}\\Vocabulary" + "Russian-English.json";
             break;
 
         default:
@@ -223,6 +289,7 @@ void CheckNoExistingDirectionary(ref string path, int input)
     }
 
     Console.WriteLine("Vocabulary Seccesfully chosen");
+    input = 999;
 
 }
 

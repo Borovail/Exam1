@@ -29,6 +29,11 @@ namespace Dictionary
 
         public BindingList<Words> LoadData()
         {
+            var data= new BindingList<Words>();
+            var trans= new List<string>();
+            trans.Add("");
+
+            data.Add(new Words ("", trans ));
             if (!File.Exists(_path))
             {
                 File.CreateText(_path).Dispose();
