@@ -10,7 +10,7 @@ namespace Dictionary
     internal class Vocabulary
     {
         IOServices _ioServices;
-        BindingList<Word> _vocabulary;
+        BindingList<Words> _vocabulary;
         public Vocabulary(string path)
         {
             _ioServices = new IOServices(path);
@@ -35,29 +35,83 @@ namespace Dictionary
             }
         }
 
-        public void AddNewWord(string word, string translation)
+        public void AddNewWord(string word, List<string> translation)
         {
-            _vocabulary.Add(new Word { Word = word, Translation = translation });
+            _vocabulary.Add(new Words { Word = word, Translation = translation });
         }
 
-        public void CheckExistingDirectionary(ref string path, string name)
+        public void SearchTranslation(string Searchedword)
         {
-            if (!File.Exists(path + name))
+            foreach (var words in _vocabulary)
             {
-                Console.WriteLine("This type of vocabulary alredy exist");
+
+                if (words.Word == Searchedword)
+                {
+
+                    foreach (var translation in words.Translation)
+                    {
+                        Console.Write(translation + " ");
+                    }
+
+                    return;
+                }
+
             }
 
-            path += name;
-            Console.WriteLine("Vocabulary seccesfully created");
+            Console.WriteLine("Unknown word");
         }
-        public void CheckNoExistingDirectionary(ref string path, string name)
+
+        public void DeleteWord(string wordForDelete)
         {
-            if (!File.Exists(path + name))
+
+            for (int i = 0; i < _vocabulary.Count; i++)
             {
-                path += name;
+                if (_vocabulary[i].Word == wordForDelete)
+                {
+                    _vocabulary.RemoveAt(i);
+                    Console.WriteLine(wordForDelete+" seccesfully deleted");
+
+                    return;
+                }
             }
-            Console.WriteLine("This type of vocabulary does not exist");
+
+            Console.WriteLine("Unknown word");
         }
+
+
+        public void DeleteTranslation(string Searchedword, string translationForDelete)
+        {
+
+            for (int i = 0; i < _vocabulary.Count; i++)
+            {
+
+                if (_vocabulary[i].Word == Searchedword)
+                {
+                    if (_vocabulary[i].Translation.Count == 1)
+                    {
+                        Console.WriteLine("You can not delete last translation of word");
+
+                        return;
+                    }
+
+                    for (int j = 0; j < _vocabulary[i].Translation.Count; j++)
+                    {
+                        if (_vocabulary[i].Translation[j] == translationForDelete)
+                        {
+                            _vocabulary[i].Translation.RemoveAt(j);
+                            Console.WriteLine(translationForDelete+" seccesfully deleted");
+
+                            return;
+                        }
+                    }
+
+                }
+            }
+
+            Console.WriteLine("Unknown word");
+        }
+
+
+
     }
-
 }
